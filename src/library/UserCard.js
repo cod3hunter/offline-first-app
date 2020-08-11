@@ -3,8 +3,11 @@ import styled from 'styled-components/native';
 
 const Container = styled.TouchableOpacity`
   width: 100%;
-  padding: 32px;
-  margin-top: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-bottom: 24px;
+  padding-top: 24px;
+  margin-top: 16px;
   background-color: white;
   border-radius: 8px;
   elevation: 1;

@@ -1,8 +1,13 @@
 import { getAllUsers } from '../../services/GoRestService';
 
-const getUsers = async ({ setUsers }) => {
-  const users = await getAllUsers();
-  setUsers(users);
+const fillUserList = async ({ setUsers }) => {
+  try {
+    const users = await getAllUsers();
+    setUsers(users);
+  } catch (err) {
+    console.error(err);
+    setUsers([]);
+  }
 };
 
-export { getUsers };
+export { fillUserList };
