@@ -1,20 +1,26 @@
 import React from 'react';
+import { Pressable } from 'react-native';
 import styled from 'styled-components/native';
+import PropTypes from 'prop-types';
 
-const Container = styled.TouchableOpacity`
+const Container = styled.View`
+  overflow: hidden;
+  border-radius: 8px;
+  margin-top: 16px;
+`;
+
+const Card = styled.TouchableOpacity`
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
   padding-bottom: 24px;
   padding-top: 24px;
-  margin-top: 16px;
   background-color: white;
   border-radius: 8px;
   elevation: 1;
 `;
 
 const TopContainer = styled.View`
-  flex: 1;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -42,9 +48,10 @@ const DescriptionText = styled.Text`
   font-size: 13px;
 `;
 
-export default function UserCard({ name, email, status, gender }) {
-  return (
-    <Container activeOpacity={0.8} onPress={() => console.warn('teste')}>
+const UserCard = ({ name, email, status, gender, onPress }) => (
+  <Container>
+    <Card 
+      onPress={onPress} android_ripple={{ borderless: false, color: '#f1f1f1' }} >
       <TopContainer>
         <Name>
           { name }
@@ -59,6 +66,20 @@ export default function UserCard({ name, email, status, gender }) {
           E-mail: { email }
         </DescriptionText>
       </DescriptionContainer>
-    </Container>
-  );
+    </Card>
+  </Container>
+);
+
+UserCard.defaultProps = {
+  gender: '',
 };
+
+UserCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  status: PropTypes.string.isRequired,
+  onPress: PropTypes.func.isRequired,
+  gender: PropTypes.string,
+};
+
+export default UserCard;
