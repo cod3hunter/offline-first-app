@@ -1,6 +1,7 @@
+import { GOREST_TOKEN } from 'react-native-dotenv';
 import { get } from './RequestService';
 
-const BEARER_AUTH = 'Bearer A_ojgnHt59fcyNTjXxGxtX9NfQtEz2bi8wTy';
+const BEARER_AUTH = `Bearer ${GOREST_TOKEN}`;
 const BASE_URL = 'https://gorest.co.in/public-api';
 
 const getAllUsers = () => {
