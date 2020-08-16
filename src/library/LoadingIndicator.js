@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import {ActivityIndicator, Dimensions} from 'react-native';
 import styled from 'styled-components/native';
 
 const SCREEN_HEIGHT = Dimensions.get('screen').height;

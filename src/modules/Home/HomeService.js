@@ -1,16 +1,9 @@
-import { getAllUsers } from '../../services/GoRestService';
+import {requestFetchUsers} from '../../store/ducks/UsersDuck';
 
-const fillUserList = async ({ setUsers, setIsLoading }) => {
-  try {
-    setIsLoading(true);
-    const users = await getAllUsers();
-    setUsers(users);
-  } catch (err) {
-    console.error(err);
-    setUsers([]);
-  } finally {
-    setIsLoading(false);
-  }
+export const fillUserList = ({dispatch}) => {
+  dispatch(requestFetchUsers());
 };
 
-export { fillUserList };
+export const createUser = ({form, dispatch}) => {
+  dispatch(requestFetchUsers({form}));
+};

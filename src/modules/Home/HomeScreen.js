@@ -1,46 +1,63 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
-import { FlatList } from 'react-native';
-import { fillUserList } from './HomeService';
+import {FlatList, StyleSheet} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import PropTypes from 'prop-types';
+import {fillUserList} from './HomeService';
 import UserCard from '../../library/UserCard';
-import FloatButton from '../../library/FloatButton';
 import LoadingIndicator from '../../library/LoadingIndicator';
+import EmptyState from '../../library/EmptyState';
+import BasicContainer from '../../library/BasicContainer';
 
-const Container = styled.View`
-  flex: 1;
+const ErrorText = styled.Text`
+  font-weight: bold;
+  color: red;
+  width: 100%;
+  text-align: center;
 `;
 
-export default function HomeScreen() {
-  const [users, setUsers] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+const styles = StyleSheet.create({
+  contentContainerStyle: {
+    paddingBottom: 16,
+  },
+});
+
+const HomeScreen = ({navigation}) => {
+  const users = useSelector((state) => state.users);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fillUserList({ setUsers, setIsLoading })
-  }, []);
+    fillUserList({dispatch});
+  }, [dispatch]);
 
-  if (isLoading) {
+  if (users.loading) {
     return <LoadingIndicator />;
   }
 
   return (
-    <Container>
+    <BasicContainer>
       <FlatList
-        data={users}
+        data={users.data}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ padding: 16, paddingBottom: 88, }}
+        contentContainerStyle={styles.contentContainerStyle}
         keyExtractor={(item) => item.id}
-        renderItem={({ item: { first_name, last_name, status, gender, email, id } }) => (
-          <UserCard 
-            name={`${first_name} ${last_name}`}
-            onPress={() => console.log('open modal')}
-            {...{ status, email, gender }}
+        renderItem={({item: {name, gender, email, id}}) => (
+          <UserCard
+            onPress={() => navigation.navigate('User', {id})}
+            {...{email, gender, name}}
           />
         )}
+        ListHeaderComponent={() =>
+          users.error && <ErrorText>Error trying to get users</ErrorText>
+        }
+        ListEmptyComponent={EmptyState}
       />
-      <FloatButton
-        onPress={() => console.log('onPress')}
-      />
-    </Container>
+    </BasicContainer>
   );
-}
+};
+
+HomeScreen.propTypes = {
+  navigation: PropTypes.object.isRequired,
+};
+
+export default HomeScreen;

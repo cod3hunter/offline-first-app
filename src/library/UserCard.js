@@ -1,7 +1,8 @@
 import React from 'react';
-import { Pressable } from 'react-native';
+import {Pressable} from 'react-native';
 import styled from 'styled-components/native';
 import PropTypes from 'prop-types';
+import {COLORS} from '../constants';
 
 const Container = styled.View`
   overflow: hidden;
@@ -9,7 +10,7 @@ const Container = styled.View`
   margin-top: 16px;
 `;
 
-const Card = styled.TouchableOpacity`
+const Card = styled(Pressable)`
   width: 100%;
   padding-left: 16px;
   padding-right: 16px;
@@ -17,7 +18,8 @@ const Card = styled.TouchableOpacity`
   padding-top: 24px;
   background-color: white;
   border-radius: 8px;
-  elevation: 1;
+  elevation: 3;
+  box-shadow: 0px 20px 20px rgba(0, 0, 0, 1);
 `;
 
 const TopContainer = styled.View`
@@ -32,13 +34,6 @@ const Name = styled.Text`
   font-weight: bold;
 `;
 
-const ActiveIndicator = styled.View`
-  height: 15px;
-  width: 15px;
-  background-color: ${({ status }) => status === 'active' ? 'green' : 'yellow'};
-  border-radius: 4px;
-`;
-
 const DescriptionContainer = styled.View`
   margin-top: 16px;
 `;
@@ -48,23 +43,17 @@ const DescriptionText = styled.Text`
   font-size: 13px;
 `;
 
-const UserCard = ({ name, email, status, gender, onPress }) => (
+const UserCard = ({name, email, gender, onPress}) => (
   <Container>
-    <Card 
-      onPress={onPress} android_ripple={{ borderless: false, color: '#f1f1f1' }} >
+    <Card
+      onPress={onPress}
+      android_ripple={{borderless: false, color: COLORS.DARK}}>
       <TopContainer>
-        <Name>
-          { name }
-        </Name>
-        <ActiveIndicator status={status} />
+        <Name>{name}</Name>
       </TopContainer>
       <DescriptionContainer>
-        <DescriptionText>
-          Gender: { gender }
-        </DescriptionText>
-        <DescriptionText>
-          E-mail: { email }
-        </DescriptionText>
+        <DescriptionText>Gender: {gender}</DescriptionText>
+        <DescriptionText>E-mail: {email}</DescriptionText>
       </DescriptionContainer>
     </Card>
   </Container>
@@ -77,7 +66,6 @@ UserCard.defaultProps = {
 UserCard.propTypes = {
   name: PropTypes.string.isRequired,
   email: PropTypes.string.isRequired,
-  status: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
   gender: PropTypes.string,
 };

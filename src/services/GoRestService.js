@@ -1,22 +1,31 @@
-import { GOREST_TOKEN } from 'react-native-dotenv';
-import { get } from './RequestService';
+import {get} from './RequestService';
+import Axios from 'axios';
 
-const BEARER_AUTH = `Bearer ${GOREST_TOKEN}`;
+const BEARER_AUTH = 'Bearer A_ojgnHt59fcyNTjXxGxtX9NfQtEz2bi8wTy';
 const BASE_URL = 'https://gorest.co.in/public-api';
 
-const getAllUsers = () => {
+export const getAllUsers = async () => {
   const url = `${BASE_URL}/users`;
   const config = {
     headers: {
       Authorization: BEARER_AUTH,
-    }
+    },
   };
-  return get({ url, config }).then((response) => {
-    return response.data?.result || [];
-  }).catch((err) => {
-    console.error(err);
-    return [];
-  });
+  return get({url, config});
 };
 
-export { getAllUsers };
+export const createUser = async ({first_name, last_name, gender, email}) => {
+  const url = `${BASE_URL}/users`;
+  const config = {
+    headers: {
+      Authorization: BEARER_AUTH,
+    },
+  };
+  const data = {
+    first_name,
+    last_name,
+    gender,
+    email,
+  };
+  return Axios.post(url, data, config);
+};
