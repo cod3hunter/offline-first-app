@@ -28,7 +28,7 @@ const TopContainer = styled.View`
   align-items: center;
 `;
 
-const Name = styled.Text`
+const Title = styled.Text`
   font-family: 'Arial, Helvetica, sans-serif';
   font-size: 16px;
   font-weight: bold;
@@ -43,31 +43,25 @@ const DescriptionText = styled.Text`
   font-size: 13px;
 `;
 
-const UserCard = ({name, email, gender, onPress}) => (
+const PostCard = ({title, body, onPress}) => (
   <Container>
     <Card
       onPress={onPress}
       android_ripple={{borderless: false, color: COLORS.DARK}}>
       <TopContainer>
-        <Name>{name}</Name>
+        <Title numberOfLines={1}>{title}</Title>
       </TopContainer>
       <DescriptionContainer>
-        <DescriptionText>Gender: {gender}</DescriptionText>
-        <DescriptionText>E-mail: {email}</DescriptionText>
+        <DescriptionText numberOfLines={5}>{body}</DescriptionText>
       </DescriptionContainer>
     </Card>
   </Container>
 );
 
-UserCard.defaultProps = {
-  gender: '',
-};
-
-UserCard.propTypes = {
-  name: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
+PostCard.propTypes = {
+  title: PropTypes.string.isRequired,
+  body: PropTypes.string.isRequired,
   onPress: PropTypes.func.isRequired,
-  gender: PropTypes.string,
 };
 
-export default UserCard;
+export default PostCard;

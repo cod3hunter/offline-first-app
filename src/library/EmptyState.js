@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components/native';
-import { WINDOW_HEIGHT, WINDOW_WIDTH } from '../constants';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '../constants';
 
 const Container = styled.View`
   margin-top: 16px;
@@ -17,9 +17,7 @@ const EmptyText = styled.Text`
 
 const EmptyState = () => (
   <Container>
-    <EmptyText>
-      Não há usuários disponíveis
-    </EmptyText>
+    <EmptyText>Não há posts disponíveis</EmptyText>
   </Container>
 );
 

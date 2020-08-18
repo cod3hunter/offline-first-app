@@ -1,5 +1,6 @@
-import {createUser} from '../../services/GoRestService';
 import {Alert} from 'react-native';
+import {normalizeFormData} from '../../services/utils';
+import {createUser} from '../../services/GoRestService';
 
 export const formReducer = (state, action) => {
   return state.map((stateItem) => {
@@ -18,16 +19,6 @@ export const initialFormState = [
   {name: 'email', value: '', placeholder: 'E-mail'},
   {name: 'gender', value: '', placeholder: 'Gender'},
 ];
-
-export const normalizedData = (entryData) => {
-  return entryData.reduce(
-    (normalizedObj, user) => ({
-      ...normalizedObj,
-      [user.name]: user.value,
-    }),
-    {},
-  );
-};
 
 export const createAlert = ({id, navigation}) => {
   Alert.alert(
@@ -50,7 +41,7 @@ export const requestCreateUser = ({
   navigation,
 }) => () => {
   setLoading(true);
-  createUser(normalizedData(form))
+  createUser(normalizeFormData(form))
     .then((response) => {
       const {data, code} = response.data;
       if (code === 201) {

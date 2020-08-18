@@ -29,6 +29,7 @@ export const createUser = ({name, gender, email}) => {
 };
 
 export const findPostsByUser = (id) => {
+  console.log(id);
   const url = `${BASE_URL}/users/${id}/posts`;
   const config = getConfig();
   return get({url, config});

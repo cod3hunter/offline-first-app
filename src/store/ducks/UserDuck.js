@@ -7,8 +7,6 @@ export const requestFindUserById = createAction(TYPES.REQUEST_FIND_USER_BY_ID);
 export const successFindUserById = createAction(TYPES.SUCCESS_FIND_USER_BY_ID);
 export const failureFindUserById = createAction(TYPES.FAILURE_FIND_USER_BY_ID);
 
-export const logoutUser = createAction(TYPES.LOGOUT_USER);
-
 const INITIAL_STATE = {
   data: {},
   error: null,

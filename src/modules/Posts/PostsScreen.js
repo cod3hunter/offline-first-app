@@ -1,19 +1,13 @@
 import React, {useEffect} from 'react';
-import styled from 'styled-components/native';
-import {FlatList, StyleSheet, Text} from 'react-native';
+import {FlatList, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import UserCard from '../../library/UserCard';
+import {findPosts, goToCreatePost} from './PostsService';
+import PostCard from '../../library/PostCard';
 import LoadingIndicator from '../../library/LoadingIndicator';
 import EmptyState from '../../library/EmptyState';
 import BasicContainer from '../../library/BasicContainer';
-
-const ErrorText = styled.Text`
-  font-weight: bold;
-  color: red;
-  width: 100%;
-  text-align: center;
-`;
+import ErrorText from '../../library/ErrorText';
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
@@ -22,25 +16,33 @@ const styles = StyleSheet.create({
 });
 
 const HomeScreen = ({navigation}) => {
+  const {data, loading, error} = useSelector((state) => state.posts);
+  const userId = useSelector((state) => state.user.data.id);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (userId) {
+      findPosts({userId, dispatch});
+    }
+  }, [dispatch, userId]);
+
+  if (loading && data.length < 1) {
+    return <LoadingIndicator />;
+  }
+
   return (
     <BasicContainer>
-      <Text>Posts</Text>
-      {/* <FlatList
-        data={users.data}
+      <FlatList
+        {...{data}}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
-        keyExtractor={(item) => item.id}
-        renderItem={({item: {name, gender, email, id}}) => (
-          <UserCard
-            onPress={goToUserScreen({navigation, userId: id})}
-            {...{email, gender, name}}
-          />
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({item: {title, body}}) => (
+          <PostCard {...{title, body}} onPress={goToCreatePost({navigation})} />
         )}
-        ListHeaderComponent={() =>
-          users.error && <ErrorText>Error trying to get users</ErrorText>
-        }
         ListEmptyComponent={EmptyState}
-      /> */}
+        ListHeaderComponent={() => error && <ErrorText text="Error" />}
+      />
     </BasicContainer>
   );
 };

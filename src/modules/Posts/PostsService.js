@@ -1,9 +1,16 @@
-import {requestFetchUsers} from '../../store/ducks/UsersDuck';
+import {requestFindPosts, requestCreatePost} from '../../store/ducks/PostsDuck';
+import {normalizeFormData} from '../../services/utils';
 
-export const fillUserList = ({dispatch}) => {
-  dispatch(requestFetchUsers());
+export const findPosts = ({dispatch, userId}) => {
+  dispatch(requestFindPosts({userId}));
 };
 
-export const goToUserScreen = ({navigation, userId}) => () => {
-  navigation.navigate('User', {id: userId});
+export const goToCreatePost = ({navigation, id}) => () => {
+  navigation.navigate('Post', {id});
+};
+
+export const createPost = ({form, userId, navigation, dispatch}) => () => {
+  const post = normalizeFormData(form);
+  dispatch(requestCreatePost({...post, userId}));
+  navigation.goBack();
 };

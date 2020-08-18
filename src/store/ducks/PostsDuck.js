@@ -18,17 +18,21 @@ const INITIAL_STATE = {
 };
 
 const createPostReducers = {
-  [TYPES.REQUEST_CREATE_POST]: (state) => {
-    state.loading = true;
+  [TYPES.REQUEST_CREATE_POST]: (state, action) => {
+    state.data.push({
+      id: action.payload.id,
+      body: action.payload.body,
+      title: action.payload.title,
+    });
   },
   [TYPES.SUCCESS_CREATE_POST]: (state, action) => {
     state.error = false;
-    state.loading = false;
-    state.data.push(action.payload.data);
+    state.data = state.data.map((post) =>
+      post.id === action.payload.id ? action.payload : post,
+    );
   },
   [TYPES.FAILURE_CREATE_POST]: (state) => {
     state.error = true;
-    state.loading = false;
   },
 };
 
@@ -52,6 +56,9 @@ const findPostsReducers = {
 export default createReducer(INITIAL_STATE, {
   ...createPostReducers,
   ...findPostsReducers,
+  [TYPES.LOGOUT_USER]: (state) => {
+    state.data = [];
+  },
 });
 
 export function* asyncRequestCreatePost(action) {
@@ -67,7 +74,7 @@ export function* asyncRequestCreatePost(action) {
 
 export function* asyncRequestFindPosts(action) {
   try {
-    const response = yield call(findPostsByUser, action.payload.id);
+    const response = yield call(findPostsByUser, action.payload.userId);
     yield put(successFindPosts({data: response.data?.data}));
   } catch (err) {
     console.log(err);

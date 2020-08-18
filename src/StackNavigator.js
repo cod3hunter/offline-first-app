@@ -4,9 +4,10 @@ import {createStackNavigator} from '@react-navigation/stack';
 import CreateUserScreen from './modules/CreateUser/CreateUserScreen';
 import AccessScreen from './modules/Access/AccessScreen';
 import PostsScreen from './modules/Posts/PostsScreen';
+import PostScreen from './modules/Posts/PostScreen';
 import HeaderButtons from './library/HeaderButtons';
 import {COLORS} from './constants';
-import {logoutUser} from './store/ducks/UserDuck';
+import {logoutUser} from './store/actions';
 
 const Stack = createStackNavigator();
 
@@ -31,11 +32,12 @@ const StackNavigator = () => {
             headerRight: () => (
               <HeaderButtons
                 onLogoutPress={() => dispatch(logoutUser())}
-                onAddPress={() => console.log('go to add post')}
+                onAddPress={() => navigation.navigate('Post')}
               />
             ),
           })}
         />
+        <Stack.Screen name="Post" component={PostScreen} />
       </Stack.Navigator>
     );
   }

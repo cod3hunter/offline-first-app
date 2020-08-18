@@ -16,7 +16,9 @@ import {
 import createSagaMiddleware from 'redux-saga';
 import AsyncStorage from '@react-native-community/async-storage';
 import user from './ducks/UserDuck';
+import posts from './ducks/PostsDuck';
 import rootSagas from './sagas';
+import {createPostMiddleware} from './customMiddlewares';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -28,6 +30,7 @@ const persistConfig = {
 
 const reducer = combineReducers({
   user,
+  posts,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
@@ -36,6 +39,7 @@ const store = configureStore({
   reducer: persistedReducer,
   middleware: [
     sagaMiddleware,
+    createPostMiddleware,
     ...getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],

@@ -1,20 +1,26 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from 'styled-components/native';
+import {useSelector, useDispatch} from 'react-redux';
 import BasicContainer from '../../library/BasicContainer';
 import InputText from '../../library/InputText';
 import Button from '../../library/Button';
 import ErrorText from '../../library/ErrorText';
 import useForm from '../../hooks/useForm';
-import {initialFormState, requestCreateUser} from './CreateUserSevice';
+import {createPost} from './PostsService';
 
 const InputContainer = styled.View`
   width: 100%;
 `;
 
-const UserScreen = ({navigation}) => {
+const initialFormState = [
+  {name: 'title', placeholder: 'Title', value: ''},
+  {name: 'body', placeholder: 'Description', value: ''},
+];
+
+const PostScreen = ({navigation}) => {
   const [form, formDispatch] = useForm(initialFormState);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState();
+  const userId = useSelector((state) => state.user.data.id);
+  const dispatch = useDispatch();
   return (
     <BasicContainer>
       <InputContainer>
@@ -31,12 +37,10 @@ const UserScreen = ({navigation}) => {
       </InputContainer>
       <Button
         text="Salvar"
-        onPress={requestCreateUser({form, setError, setLoading, navigation})}
-        loading={loading}
+        onPress={createPost({navigation, form, userId, dispatch})}
       />
-      {error && <ErrorText text={error} />}
     </BasicContainer>
   );
 };
 
-export default UserScreen;
+export default PostScreen;
