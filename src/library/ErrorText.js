@@ -4,9 +4,12 @@ import PropTypes from 'prop-types';
 
 const Container = styled.View`
   width: 100%;
-  margin-top: 24px;
+  margin-top: 8px;
+  padding: 8px;
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
+  border-radius: 8px;
 `;
 
 const Text = styled.Text`

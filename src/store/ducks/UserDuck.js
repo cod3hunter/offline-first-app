@@ -7,13 +7,15 @@ export const requestFindUserById = createAction(TYPES.REQUEST_FIND_USER_BY_ID);
 export const successFindUserById = createAction(TYPES.SUCCESS_FIND_USER_BY_ID);
 export const failureFindUserById = createAction(TYPES.FAILURE_FIND_USER_BY_ID);
 
+export const logoutUser = createAction(TYPES.LOGOUT_USER);
+
 const INITIAL_STATE = {
   data: {},
-  error: false,
+  error: null,
   loading: false,
 };
 
-export default createReducer(INITIAL_STATE, {
+const findUserByIdReducers = {
   [TYPES.REQUEST_FIND_USER_BY_ID]: (state) => {
     state.loading = true;
   },
@@ -21,21 +23,43 @@ export default createReducer(INITIAL_STATE, {
     return {
       loading: false,
       data: action.payload.data,
-      error: false,
+      error: null,
     };
   },
-  [TYPES.FAILURE_FIND_USER_BY_ID]: (state) => {
+  [TYPES.FAILURE_FIND_USER_BY_ID]: (state, action) => {
     state.loading = false;
-    state.error = true;
+    state.error = action.payload.error;
   },
+};
+
+const logoutUserReducers = {
+  [TYPES.LOGOUT_USER]: (_, action) => {
+    return INITIAL_STATE;
+  },
+};
+
+export default createReducer(INITIAL_STATE, {
+  ...findUserByIdReducers,
+  ...logoutUserReducers,
 });
 
 export function* asyncRequestFindUserById(action) {
   try {
     const response = yield call(findUserById, action.payload.id);
-    yield put(successFindUserById({data: response.data?.data || {}}));
+    const userData = response.data?.data;
+    if (userData?.id) {
+      return yield put(successFindUserById({data: userData || {}}));
+    }
+    yield put(
+      failureFindUserById({
+        error: userData.message || 'failed to connect to the server',
+      }),
+    );
   } catch (err) {
-    console.log(err);
-    yield put(failureFindUserById());
+    yield put(
+      failureFindUserById({
+        error: err.message,
+      }),
+    );
   }
 }

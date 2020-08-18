@@ -1,11 +1,12 @@
 import React from 'react';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
 import CreateUserScreen from './modules/CreateUser/CreateUserScreen';
 import AccessScreen from './modules/Access/AccessScreen';
 import PostsScreen from './modules/Posts/PostsScreen';
-import AddHeaderButton from './library/AddHeaderButton';
+import HeaderButtons from './library/HeaderButtons';
 import {COLORS} from './constants';
+import {logoutUser} from './store/ducks/UserDuck';
 
 const Stack = createStackNavigator();
 
@@ -19,7 +20,7 @@ const screenOptions = {
 
 const StackNavigator = () => {
   const userId = useSelector((state) => state.user.data?.id);
-
+  const dispatch = useDispatch();
   if (userId) {
     return (
       <Stack.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
@@ -28,7 +29,10 @@ const StackNavigator = () => {
           component={PostsScreen}
           options={({navigation}) => ({
             headerRight: () => (
-              <AddHeaderButton onPress={() => console.log('go to add post')} />
+              <HeaderButtons
+                onLogoutPress={() => dispatch(logoutUser())}
+                onAddPress={() => console.log('go to add post')}
+              />
             ),
           })}
         />

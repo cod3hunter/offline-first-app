@@ -1,10 +1,11 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {goToCreateUser, findUserById} from './AccessService';
 import BasicContainer from '../../library/BasicContainer';
 import InputText from '../../library/InputText';
 import Button from '../../library/Button';
+import ErrorText from '../../library/ErrorText';
 
 const InputContainer = styled.View`
   width: 100%;
@@ -16,6 +17,7 @@ const InputContainer = styled.View`
 const AccessScreen = ({navigation}) => {
   const [userId, setUserId] = useState('');
   const dispatch = useDispatch();
+  const {error, loading} = useSelector((state) => state.user);
   return (
     <BasicContainer>
       <InputContainer>
@@ -24,7 +26,9 @@ const AccessScreen = ({navigation}) => {
           value={userId}
           onChangeText={setUserId}
         />
+        {error && <ErrorText text={error} />}
         <Button
+          {...{loading}}
           text="Ver Posts"
           onPress={findUserById({dispatch, id: userId})}
         />
