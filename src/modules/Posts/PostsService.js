@@ -4,6 +4,6 @@ export const fillUserList = ({dispatch}) => {
   dispatch(requestFetchUsers());
 };
 
-export const createUser = ({form, dispatch}) => {
-  dispatch(requestFetchUsers({form}));
+export const goToUserScreen = ({navigation, userId}) => () => {
+  navigation.navigate('User', {id: userId});
 };

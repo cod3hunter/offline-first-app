@@ -1,22 +1,22 @@
 import React from 'react';
-import {ActivityIndicator, Dimensions} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import styled from 'styled-components/native';
+import BasicContainer from './BasicContainer';
+import {COLORS} from '../constants';
 
-const SCREEN_HEIGHT = Dimensions.get('screen').height;
-const SCREEN_WIDTH = Dimensions.get('screen').width;
-
-const Container = styled.View`
-  flex: 1;
+const LoadingContainer = styled.View`
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  width: ${SCREEN_WIDTH}px;
-  height: ${SCREEN_HEIGHT}px;
 `;
 
 const LoadingIndicator = () => (
-  <Container>
-    <ActivityIndicator size="large" color="black" />
-  </Container>
+  <BasicContainer>
+    <LoadingContainer>
+      <ActivityIndicator size="large" color={COLORS.DARK} />
+    </LoadingContainer>
+  </BasicContainer>
 );
 
 export default LoadingIndicator;

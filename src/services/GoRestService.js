@@ -1,31 +1,45 @@
-import {get} from './RequestService';
-import Axios from 'axios';
+import {get, post} from './RequestService';
 
-const BEARER_AUTH = 'Bearer A_ojgnHt59fcyNTjXxGxtX9NfQtEz2bi8wTy';
+const BEARER_AUTH =
+  'Bearer 72774da46b9d62c91d27fd62e34c90de35b04b92aa9d9eaef8ee167683757cc6';
 const BASE_URL = 'https://gorest.co.in/public-api';
 
-export const getAllUsers = async () => {
-  const url = `${BASE_URL}/users`;
-  const config = {
-    headers: {
-      Authorization: BEARER_AUTH,
-    },
-  };
+export const getConfig = () => ({
+  headers: {
+    Authorization: BEARER_AUTH,
+  },
+});
+
+export const findUserById = (id) => {
+  const url = `${BASE_URL}/users/${id}`;
+  const config = getConfig();
   return get({url, config});
 };
 
-export const createUser = async ({first_name, last_name, gender, email}) => {
+export const createUser = ({name, gender, email}) => {
   const url = `${BASE_URL}/users`;
-  const config = {
-    headers: {
-      Authorization: BEARER_AUTH,
-    },
-  };
+  const config = getConfig();
   const data = {
-    first_name,
-    last_name,
+    name,
     gender,
     email,
+    status: 'Active',
   };
-  return Axios.post(url, data, config);
+  return post({url, config, data});
+};
+
+export const findPostsByUser = (id) => {
+  const url = `${BASE_URL}/users/${id}/posts`;
+  const config = getConfig();
+  return get({url, config});
+};
+
+export const createPost = ({userId, title, body}) => {
+  const url = `${BASE_URL}/users/${userId}/posts`;
+  const config = getConfig();
+  const data = {
+    title,
+    body,
+  };
+  return post({url, config, data});
 };

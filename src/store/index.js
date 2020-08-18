@@ -1,4 +1,8 @@
-import { configureStore, getDefaultMiddleware, combineReducers } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  getDefaultMiddleware,
+  combineReducers,
+} from '@reduxjs/toolkit';
 import {
   persistStore,
   persistReducer,
@@ -7,11 +11,11 @@ import {
   PAUSE,
   PERSIST,
   PURGE,
-  REGISTER
+  REGISTER,
 } from 'redux-persist';
 import createSagaMiddleware from 'redux-saga';
 import AsyncStorage from '@react-native-community/async-storage';
-import users from './ducks/UsersDuck';
+import user from './ducks/UserDuck';
 import rootSagas from './sagas';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -23,7 +27,7 @@ const persistConfig = {
 };
 
 const reducer = combineReducers({
-  users,
+  user,
 });
 
 const persistedReducer = persistReducer(persistConfig, reducer);
@@ -44,4 +48,4 @@ sagaMiddleware.run(rootSagas);
 
 const persistor = persistStore(store);
 
-export { persistor, store };
+export {persistor, store};

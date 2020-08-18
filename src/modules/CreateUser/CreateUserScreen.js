@@ -1,16 +1,23 @@
-import React, {useReducer} from 'react';
+import React, {useReducer, useState} from 'react';
 import styled from 'styled-components/native';
 import BasicContainer from '../../library/BasicContainer';
 import InputText from '../../library/InputText';
-import SubmitButton from '../../library/SubmitButton';
-import {formReducer, initialFormState} from './UserSevice';
+import Button from '../../library/Button';
+import ErrorText from '../../library/ErrorText';
+import {
+  formReducer,
+  initialFormState,
+  requestCreateUser,
+} from './CreateUserSevice';
 
 const InputContainer = styled.View`
   width: 100%;
 `;
 
-const UserScreen = () => {
+const UserScreen = ({navigation}) => {
   const [form, formDispatch] = useReducer(formReducer, initialFormState);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState();
   return (
     <BasicContainer>
       <InputContainer>
@@ -25,7 +32,12 @@ const UserScreen = () => {
           />
         ))}
       </InputContainer>
-      <SubmitButton text="Salvar" onPress={() => console.log('save')} />
+      <Button
+        text="Salvar"
+        onPress={requestCreateUser({form, setError, setLoading, navigation})}
+        loading={loading}
+      />
+      {error && <ErrorText text={error} />}
     </BasicContainer>
   );
 };
