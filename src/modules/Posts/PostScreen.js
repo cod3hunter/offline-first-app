@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components/native';
 import {useSelector, useDispatch} from 'react-redux';
 import BasicContainer from '../../library/BasicContainer';
@@ -17,10 +17,21 @@ const initialFormState = [
   {name: 'body', placeholder: 'Description', value: ''},
 ];
 
-const PostScreen = ({navigation}) => {
-  const [form, formDispatch] = useForm(initialFormState);
-  const userId = useSelector((state) => state.user.data.id);
+const PostScreen = ({navigation, route}) => {
+  const postId = route.params?.id;
   const dispatch = useDispatch();
+  const post = useSelector((state) =>
+    postId ? state.posts.data.find((item) => item.id === postId) : null,
+  );
+  const userId = useSelector((state) => state.user.data.id);
+  const [form, formDispatch] = useForm(initialFormState);
+
+  useEffect(() => {
+    if (post) {
+      formDispatch({name: 'initialValues', value: post});
+    }
+  }, [post, formDispatch]);
+
   return (
     <BasicContainer>
       <InputContainer>

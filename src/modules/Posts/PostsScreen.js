@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {FlatList, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {findPosts, goToCreatePost} from './PostsService';
+import {findPosts, goToPost} from './PostsService';
 import PostCard from '../../library/PostCard';
 import LoadingIndicator from '../../library/LoadingIndicator';
 import EmptyState from '../../library/EmptyState';
@@ -37,8 +37,8 @@ const HomeScreen = ({navigation}) => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({item: {title, body}}) => (
-          <PostCard {...{title, body}} onPress={goToCreatePost({navigation})} />
+        renderItem={({item: {title, body, id}}) => (
+          <PostCard {...{title, body}} onPress={goToPost({navigation, id})} />
         )}
         ListEmptyComponent={EmptyState}
         ListHeaderComponent={() => error && <ErrorText text="Error" />}

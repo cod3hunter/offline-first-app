@@ -2,9 +2,21 @@ import {createAction, createReducer} from '@reduxjs/toolkit';
 import {call, put} from 'redux-saga/effects';
 import TYPES from '../types';
 import {findPostsByUser, createPost} from '../../services/GoRestService';
+import {generateId} from '../../services/utils';
 import {failureFindUserById} from './UserDuck';
 
-export const requestCreatePost = createAction(TYPES.REQUEST_CREATE_POST);
+export const requestCreatePost = createAction(
+  TYPES.REQUEST_CREATE_POST,
+  function prepare({title, body}) {
+    return {
+      payload: {
+        title,
+        body,
+        id: generateId(),
+      },
+    };
+  },
+);
 export const successCreatePost = createAction(TYPES.SUCCESS_CREATE_POST);
 export const failureCreatePost = createAction(TYPES.FAILURE_CREATE_POST);
 export const requestFindPosts = createAction(TYPES.REQUEST_FIND_POSTS);

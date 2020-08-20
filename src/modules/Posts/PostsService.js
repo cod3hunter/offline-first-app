@@ -5,7 +5,7 @@ export const findPosts = ({dispatch, userId}) => {
   dispatch(requestFindPosts({userId}));
 };
 
-export const goToCreatePost = ({navigation, id}) => () => {
+export const goToPost = ({navigation, id}) => () => {
   navigation.navigate('Post', {id});
 };
 

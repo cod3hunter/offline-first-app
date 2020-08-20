@@ -30,7 +30,7 @@ const TopContainer = styled.View`
 
 const Title = styled.Text`
   font-family: 'Arial, Helvetica, sans-serif';
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
 `;
 
@@ -40,7 +40,7 @@ const DescriptionContainer = styled.View`
 
 const DescriptionText = styled.Text`
   font-family: 'Arial, Helvetica, sans-serif';
-  font-size: 13px;
+  font-size: 15px;
 `;
 
 const PostCard = ({title, body, onPress}) => (

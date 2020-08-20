@@ -17,12 +17,10 @@ const findUserByIdReducers = {
   [TYPES.REQUEST_FIND_USER_BY_ID]: (state) => {
     state.loading = true;
   },
-  [TYPES.SUCCESS_FIND_USER_BY_ID]: (_, action) => {
-    return {
-      loading: false,
-      data: action.payload.data,
-      error: null,
-    };
+  [TYPES.SUCCESS_FIND_USER_BY_ID]: (state, action) => {
+    state.loading = false;
+    state.data = action.payload.data;
+    state.error = null;
   },
   [TYPES.FAILURE_FIND_USER_BY_ID]: (state, action) => {
     state.loading = false;

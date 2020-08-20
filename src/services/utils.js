@@ -19,3 +19,5 @@ export const formReducer = (state, action) => {
     return stateItem;
   });
 };
+
+export const generateId = () => Math.floor(1000 + Math.random() * 9000) * -1;
