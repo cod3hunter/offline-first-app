@@ -1,16 +1,17 @@
 import React, {useEffect} from 'react';
-import {useSelector} from 'react-redux';
-import {} from './SplashLoadingService';
+import {useSelector, useDispatch} from 'react-redux';
+import {validateAccess} from './SplashLoadingService';
 import BasicContainer from '../../library/BasicContainer';
 import LoadingIndicator from '../../library/LoadingIndicator';
 
 const SplashLoadingScreen = ({}) => {
   const userId = useSelector((state) => state.user.data?.id);
+  const dispatch = useDispatch();
   useEffect(() => {
     if (userId) {
-      console.log(userId);
+      validateAccess({dispatch, userId});
     }
-  }, [userId]);
+  }, [userId, dispatch]);
   return (
     <BasicContainer>
       <LoadingIndicator />

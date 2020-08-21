@@ -5,6 +5,7 @@ import CreateUserScreen from './modules/CreateUser/CreateUserScreen';
 import AccessScreen from './modules/Access/AccessScreen';
 import PostsScreen from './modules/Posts/PostsScreen';
 import PostScreen from './modules/Posts/PostScreen';
+import SplashLoadingScreen from './modules/SplashLoading/SplashLoadingScreen';
 import HeaderButtons from './library/HeaderButtons';
 import {COLORS} from './constants';
 import {logoutUser} from './store/actions';
@@ -24,7 +25,14 @@ const StackNavigator = () => {
   const dispatch = useDispatch();
   if (userId) {
     return (
-      <Stack.Navigator initialRouteName="Posts" screenOptions={screenOptions}>
+      <Stack.Navigator
+        initialRouteName="SplashLoading"
+        screenOptions={screenOptions}>
+        <Stack.Screen
+          name="SplashLoading"
+          component={SplashLoadingScreen}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Posts"
           component={PostsScreen}

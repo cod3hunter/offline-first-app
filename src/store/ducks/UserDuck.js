@@ -1,11 +1,15 @@
-import {createAction, createReducer} from '@reduxjs/toolkit';
-import {call, put} from 'redux-saga/effects';
+import {createAction, createReducer, createSelector} from '@reduxjs/toolkit';
+import {call, put, select} from 'redux-saga/effects';
 import TYPES from '../types';
 import {findUserById} from '../../services/GoRestService';
+import {reset} from '../../services/NavigationService';
 
 export const requestFindUserById = createAction(TYPES.REQUEST_FIND_USER_BY_ID);
 export const successFindUserById = createAction(TYPES.SUCCESS_FIND_USER_BY_ID);
 export const failureFindUserById = createAction(TYPES.FAILURE_FIND_USER_BY_ID);
+export const requestValidateUser = createAction(TYPES.REQUEST_VALIDATE_USER);
+export const successValidateUser = createAction(TYPES.SUCCESS_VALIDATE_USER);
+export const failureValidateUser = createAction(TYPES.FAILURE_VALIDATE_USER);
 
 const INITIAL_STATE = {
   data: {},
@@ -28,6 +32,19 @@ const findUserByIdReducers = {
   },
 };
 
+const validateUserReducers = {
+  [TYPES.REQUEST_VALIDATE_USER]: (state) => {
+    state.loading = true;
+  },
+  [TYPES.SUCCESS_VALIDATE_USER]: (state, action) => {
+    state.loading = false;
+  },
+  [TYPES.FAILURE_VALIDATE_USER]: (state) => {
+    state.loading = false;
+    state.data = {};
+  },
+};
+
 const logoutUserReducers = {
   [TYPES.LOGOUT_USER]: () => {
     return INITIAL_STATE;
@@ -36,8 +53,14 @@ const logoutUserReducers = {
 
 export default createReducer(INITIAL_STATE, {
   ...findUserByIdReducers,
+  ...validateUserReducers,
   ...logoutUserReducers,
 });
+
+const userIdSelector = createSelector(
+  (state) => state.user.data,
+  (user) => user?.id,
+);
 
 export function* asyncRequestFindUserById(action) {
   try {
@@ -58,4 +81,16 @@ export function* asyncRequestFindUserById(action) {
       }),
     );
   }
+}
+
+export function* asyncRequestValidateUser(action) {
+  try {
+    const response = yield call(findUserById, action.payload.id);
+    const responseUserData = response.data?.data;
+    const currentUserId = yield select(userIdSelector);
+    if (responseUserData?.id && responseUserData.id === currentUserId) {
+      yield put(successValidateUser());
+      return reset({routes: [{name: 'Posts'}]});
+    }
+  } catch (err) {}
 }
