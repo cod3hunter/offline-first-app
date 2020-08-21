@@ -12,5 +12,9 @@ export const goToPost = ({navigation, id}) => () => {
 export const createPost = ({form, userId, navigation, dispatch}) => () => {
   const post = normalizeFormData(form);
   dispatch(requestCreatePost({...post, userId}));
-  navigation.goBack();
 };
+
+export const initialFormState = [
+  {name: 'title', placeholder: 'Title', value: ''},
+  {name: 'body', placeholder: 'Description', value: ''},
+];

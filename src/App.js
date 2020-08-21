@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {PersistGate} from 'redux-persist/integration/react';
 import StackNavigator from './StackNavigator';
 import {COLORS} from './constants';
+import {navigationRef} from './services/NavigationService';
 
 if (__DEV__) {
   import('./config/ReactotronConfig').then(() =>
@@ -17,7 +18,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor} loading={null}>
-        <NavigationContainer>
+        <NavigationContainer ref={navigationRef}>
           <StatusBar backgroundColor={COLORS.PRIMARY} />
           <StackNavigator />
         </NavigationContainer>

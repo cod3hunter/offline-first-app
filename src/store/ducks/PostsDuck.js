@@ -2,16 +2,18 @@ import {createAction, createReducer} from '@reduxjs/toolkit';
 import {call, put} from 'redux-saga/effects';
 import TYPES from '../types';
 import {findPostsByUser, createPost} from '../../services/GoRestService';
+import {goBack} from '../../services/NavigationService';
 import {generateId} from '../../services/utils';
 import {failureFindUserById} from './UserDuck';
 
 export const requestCreatePost = createAction(
   TYPES.REQUEST_CREATE_POST,
-  function prepare({title, body}) {
+  function prepare({title, body, userId}) {
     return {
       payload: {
         title,
         body,
+        userId,
         id: generateId(),
       },
     };
@@ -31,6 +33,7 @@ const INITIAL_STATE = {
 
 const createPostReducers = {
   [TYPES.REQUEST_CREATE_POST]: (state, action) => {
+    state.loading = true;
     state.data.push({
       id: action.payload.id,
       body: action.payload.body,
@@ -39,12 +42,14 @@ const createPostReducers = {
   },
   [TYPES.SUCCESS_CREATE_POST]: (state, action) => {
     state.error = false;
+    state.loading = false;
     state.data = state.data.map((post) =>
       post.id === action.payload.id ? action.payload : post,
     );
   },
   [TYPES.FAILURE_CREATE_POST]: (state) => {
     state.error = true;
+    state.loading = false;
   },
 };
 
@@ -77,7 +82,12 @@ export function* asyncRequestCreatePost(action) {
   try {
     const {userId, title, body} = action.payload;
     const response = yield call(createPost, {userId, title, body});
-    yield put(successCreatePost({data: response.data?.data || {}}));
+    const code = response.data?.code;
+    if (code === 201) {
+      yield put(successCreatePost({data: response.data?.data || {}}));
+      return goBack();
+    }
+    yield put(failureFindPosts());
   } catch (err) {
     console.log(err);
     yield put(failureFindUserById());

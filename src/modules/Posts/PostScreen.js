@@ -6,16 +6,11 @@ import InputText from '../../library/InputText';
 import Button from '../../library/Button';
 import ErrorText from '../../library/ErrorText';
 import useForm from '../../hooks/useForm';
-import {createPost} from './PostsService';
+import {createPost, initialFormState} from './PostsService';
 
 const InputContainer = styled.View`
   width: 100%;
 `;
-
-const initialFormState = [
-  {name: 'title', placeholder: 'Title', value: ''},
-  {name: 'body', placeholder: 'Description', value: ''},
-];
 
 const PostScreen = ({navigation, route}) => {
   const postId = route.params?.id;
@@ -24,6 +19,7 @@ const PostScreen = ({navigation, route}) => {
     postId ? state.posts.data.find((item) => item.id === postId) : null,
   );
   const userId = useSelector((state) => state.user.data.id);
+  const {loading, error} = useSelector((state) => state.posts);
   const [form, formDispatch] = useForm(initialFormState);
 
   useEffect(() => {
@@ -47,9 +43,11 @@ const PostScreen = ({navigation, route}) => {
         ))}
       </InputContainer>
       <Button
+        {...{loading}}
         text="Salvar"
         onPress={createPost({navigation, form, userId, dispatch})}
       />
+      {error && <ErrorText text="Tivemos um problema para criar o post" />}
     </BasicContainer>
   );
 };

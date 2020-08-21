@@ -29,7 +29,7 @@ const findUserByIdReducers = {
 };
 
 const logoutUserReducers = {
-  [TYPES.LOGOUT_USER]: (_, action) => {
+  [TYPES.LOGOUT_USER]: () => {
     return INITIAL_STATE;
   },
 };
