@@ -3,6 +3,7 @@ import {call, put, select} from 'redux-saga/effects';
 import TYPES from '../types';
 import {findUserById} from '../../services/GoRestService';
 import {reset} from '../../services/NavigationService';
+import {setAppLoading} from '../actions';
 
 export const requestFindUserById = createAction(TYPES.REQUEST_FIND_USER_BY_ID);
 export const successFindUserById = createAction(TYPES.SUCCESS_FIND_USER_BY_ID);
@@ -75,6 +76,7 @@ export function* asyncRequestFindUserById(action) {
       }),
     );
   } catch (err) {
+    console.log(err);
     yield put(
       failureFindUserById({
         error: err.message,
@@ -90,7 +92,12 @@ export function* asyncRequestValidateUser(action) {
     const currentUserId = yield select(userIdSelector);
     if (responseUserData?.id && responseUserData.id === currentUserId) {
       yield put(successValidateUser());
+      yield put(setAppLoading(false));
       return reset({routes: [{name: 'Posts'}]});
     }
-  } catch (err) {}
+    yield put(failureValidateUser());
+  } catch (err) {
+    console.log(err);
+    yield put(failureValidateUser());
+  }
 }
