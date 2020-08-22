@@ -1,7 +1,5 @@
 import axios from 'axios';
 
-const get = ({url, config}) => axios.get(url, config);
-
-const post = ({url, config, data}) => axios.post(url, data, config);
-
-export {get, post};
+export const get = ({url, config}) => axios.get(url, config);
+export const post = ({url, config, data}) => axios.post(url, data, config);
+export const put = ({url, config, data}) => axios.put(url, data, config);

@@ -1,7 +1,7 @@
-import {get, post} from './RequestService';
+import * as Request from './RequestService';
+import {API_TOKEN} from '../constants';
 
-const BEARER_AUTH =
-  'Bearer 72774da46b9d62c91d27fd62e34c90de35b04b92aa9d9eaef8ee167683757cc6';
+const BEARER_AUTH = `Bearer ${API_TOKEN}`;
 const BASE_URL = 'https://gorest.co.in/public-api';
 
 export const getConfig = () => ({
@@ -13,7 +13,7 @@ export const getConfig = () => ({
 export const findUserById = (id) => {
   const url = `${BASE_URL}/users/${id}`;
   const config = getConfig();
-  return get({url, config});
+  return Request.get({url, config});
 };
 
 export const createUser = ({name, gender, email}) => {
@@ -25,13 +25,13 @@ export const createUser = ({name, gender, email}) => {
     email,
     status: 'Active',
   };
-  return post({url, config, data});
+  return Request.post({url, config, data});
 };
 
 export const findPostsByUser = (id) => {
   const url = `${BASE_URL}/users/${id}/posts`;
   const config = getConfig();
-  return get({url, config});
+  return Request.get({url, config});
 };
 
 export const createPost = ({userId, title, body}) => {
@@ -41,5 +41,15 @@ export const createPost = ({userId, title, body}) => {
     title,
     body,
   };
-  return post({url, config, data});
+  return Request.post({url, config, data});
+};
+
+export const updateUser = ({postId, title, body}) => {
+  const url = `${BASE_URL}/posts/${postId}`;
+  const config = getConfig();
+  const data = {
+    title,
+    body,
+  };
+  return Request.put({url, config, data});
 };
