@@ -18,8 +18,10 @@ import AsyncStorage from '@react-native-community/async-storage';
 import user from './ducks/UserDuck';
 import posts from './ducks/PostsDuck';
 import rootSagas from './sagas';
+import Reactotron from '../config/ReactotronConfig';
 
-const sagaMiddleware = createSagaMiddleware();
+const sagaMonitor = Reactotron.createSagaMonitor();
+const sagaMiddleware = createSagaMiddleware({sagaMonitor});
 
 const persistConfig = {
   key: 'root',
@@ -36,6 +38,7 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 
 const store = configureStore({
   reducer: persistedReducer,
+  enhancers: [Reactotron.createEnhancer()],
   middleware: [
     sagaMiddleware,
     ...getDefaultMiddleware({
