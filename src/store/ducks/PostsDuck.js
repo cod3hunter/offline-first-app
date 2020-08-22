@@ -1,10 +1,14 @@
 import {createAction, createReducer} from '@reduxjs/toolkit';
 import {call, put} from 'redux-saga/effects';
 import TYPES from '../types';
-import {findPostsByUser, createPost} from '../../services/GoRestService';
 import {goBack} from '../../services/NavigationService';
 import {generateId} from '../../services/utils';
 import {failureFindUserById} from './UserDuck';
+import {
+  findPostsByUser,
+  createPost,
+  updatePost,
+} from '../../services/GoRestService';
 
 export const requestCreatePost = createAction(
   TYPES.REQUEST_CREATE_POST,
@@ -24,6 +28,9 @@ export const failureCreatePost = createAction(TYPES.FAILURE_CREATE_POST);
 export const requestFindPosts = createAction(TYPES.REQUEST_FIND_POSTS);
 export const successFindPosts = createAction(TYPES.SUCCESS_FIND_POSTS);
 export const failureFindPosts = createAction(TYPES.FAILURE_FIND_POSTS);
+export const requestUpdatePost = createAction(TYPES.REQUEST_UPDATE_POST);
+export const successUpdatePost = createAction(TYPES.SUCCESS_UPDATE_POST);
+export const failureUpdatePost = createAction(TYPES.FAILURE_UPDATE_POST);
 
 const INITIAL_STATE = {
   data: [],
@@ -57,12 +64,10 @@ const findPostsReducers = {
   [TYPES.REQUEST_FIND_POSTS]: (state) => {
     state.loading = true;
   },
-  [TYPES.SUCCESS_FIND_POSTS]: (_, action) => {
-    return {
-      error: false,
-      loading: false,
-      data: action.payload.data,
-    };
+  [TYPES.SUCCESS_FIND_POSTS]: (state, action) => {
+    state.error = false;
+    state.loading = false;
+    state.data = action.payload.data;
   },
   [TYPES.FAILURE_FIND_POSTS]: (state) => {
     state.error = true;
@@ -70,9 +75,31 @@ const findPostsReducers = {
   },
 };
 
+const updatePostReducers = {
+  [TYPES.REQUEST_UPDATE_POST]: (state) => {
+    state.loading = true;
+  },
+  [TYPES.SUCCESS_UPDATE_POST]: (state, action) => {
+    state.error = false;
+    state.loading = false;
+    const updatedUserData = action.payload.data;
+    state.data = state.data.map((post) => {
+      if (post.id === updatedUserData.id) {
+        return updatedUserData;
+      }
+      return post;
+    });
+  },
+  [TYPES.FAILURE_UPDATE_POST]: (state) => {
+    state.loading = false;
+    state.error = true;
+  },
+};
+
 export default createReducer(INITIAL_STATE, {
   ...createPostReducers,
   ...findPostsReducers,
+  ...updatePostReducers,
   [TYPES.LOGOUT_USER]: (state) => {
     state.data = [];
   },
@@ -101,5 +128,21 @@ export function* asyncRequestFindPosts(action) {
   } catch (err) {
     console.log(err);
     yield put(failureFindPosts());
+  }
+}
+
+export function* asyncRequestUpdatePost(action) {
+  try {
+    const {postId, title, body} = action.payload;
+    const response = yield call(updatePost, {postId, title, body});
+    const code = response.data?.code;
+    if (code === 200) {
+      yield put(successUpdatePost({data: response.data?.data}));
+      return goBack();
+    }
+    yield put(failureUpdatePost());
+  } catch (err) {
+    console.log(err);
+    yield put(failureUpdatePost());
   }
 }

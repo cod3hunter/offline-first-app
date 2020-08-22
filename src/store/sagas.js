@@ -4,7 +4,11 @@ import {
   asyncRequestFindUserById,
   asyncRequestValidateUser,
 } from './ducks/UserDuck';
-import {asyncRequestCreatePost, asyncRequestFindPosts} from './ducks/PostsDuck';
+import {
+  asyncRequestCreatePost,
+  asyncRequestFindPosts,
+  asyncRequestUpdatePost,
+} from './ducks/PostsDuck';
 
 export default function* root() {
   yield all([
@@ -12,5 +16,6 @@ export default function* root() {
     takeLatest(TYPES.REQUEST_CREATE_POST, asyncRequestCreatePost),
     takeLatest(TYPES.REQUEST_FIND_POSTS, asyncRequestFindPosts),
     takeLatest(TYPES.REQUEST_VALIDATE_USER, asyncRequestValidateUser),
+    takeLatest(TYPES.REQUEST_UPDATE_POST, asyncRequestUpdatePost),
   ]);
 }

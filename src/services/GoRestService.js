@@ -44,7 +44,7 @@ export const createPost = ({userId, title, body}) => {
   return Request.post({url, config, data});
 };
 
-export const updateUser = ({postId, title, body}) => {
+export const updatePost = ({postId, title, body}) => {
   const url = `${BASE_URL}/posts/${postId}`;
   const config = getConfig();
   const data = {
