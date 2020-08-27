@@ -2,10 +2,7 @@ import React, {useState} from 'react';
 import styled from 'styled-components/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {goToCreateUser, findUserById} from './AccessService';
-import BasicContainer from '../../library/BasicContainer';
-import InputText from '../../library/InputText';
-import Button from '../../library/Button';
-import ErrorText from '../../library/ErrorText';
+import {BasicContainer, InputText, Button, ErrorText} from '../../library';
 
 const InputContainer = styled.View`
   width: 100%;

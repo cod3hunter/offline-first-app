@@ -1,30 +1,34 @@
 import React, {useEffect} from 'react';
-import {FlatList, StyleSheet} from 'react-native';
+import styled from 'styled-components/native';
+import {FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
 import {findPosts, goToPost} from './PostsService';
-import PostCard from '../../library/PostCard';
-import LoadingIndicator from '../../library/LoadingIndicator';
-import EmptyState from '../../library/EmptyState';
-import BasicContainer from '../../library/BasicContainer';
-import ErrorText from '../../library/ErrorText';
-import reactotron from 'reactotron-react-native';
+import {postListSelector} from '../../store/ducks/PostsDuck';
+import {userIdSelector} from '../../store/ducks/UserDuck';
+import {
+  BasicContainer,
+  EmptyState,
+  LoadingIndicator,
+  PostCard,
+  ErrorText,
+} from '../../library/';
 
-const styles = StyleSheet.create({
+const PostList = styled(FlatList).attrs(() => ({
   contentContainerStyle: {
-    paddingBottom: 16,
+    paddingBotton: 16,
   },
-});
+}))``;
 
 const HomeScreen = ({navigation}) => {
-  const {data, loading, error} = useSelector((state) => state.posts);
-  const userId = useSelector((state) => state.user.data.id);
+  const data = useSelector(postListSelector);
+  const userId = useSelector(userIdSelector);
+  const loading = useSelector((state) => state.posts.loading);
+  const error = useSelector((state) => state.posts.error);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (userId) {
-      findPosts({userId, dispatch});
-    }
+    findPosts({userId, dispatch});
   }, [dispatch, userId]);
 
   if (loading && data.length < 1) {
@@ -33,10 +37,9 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <BasicContainer>
-      <FlatList
+      <PostList
         {...{data}}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainerStyle}
         keyExtractor={(item) => String(item?.id)}
         renderItem={({item: {title, body, id}}) => (
           <PostCard {...{title, body}} onPress={goToPost({navigation, id})} />

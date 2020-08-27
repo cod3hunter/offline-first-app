@@ -1,10 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from 'styled-components/native';
 import {useSelector, useDispatch} from 'react-redux';
-import BasicContainer from '../../library/BasicContainer';
-import InputText from '../../library/InputText';
-import Button from '../../library/Button';
-import ErrorText from '../../library/ErrorText';
+import {BasicContainer, InputText, Button, ErrorText} from '../../library';
 import useForm from '../../hooks/useForm';
 import {createPost, initialFormState, updatePost} from './PostsService';
 

@@ -6,7 +6,7 @@ import AccessScreen from './modules/Access/AccessScreen';
 import PostsScreen from './modules/Posts/PostsScreen';
 import PostScreen from './modules/Posts/PostScreen';
 import SplashLoadingScreen from './modules/SplashLoading/SplashLoadingScreen';
-import HeaderButtons from './library/HeaderButtons';
+import {HeaderButtons} from './library';
 import {COLORS} from './constants';
 import {logoutUser} from './store/actions';
 

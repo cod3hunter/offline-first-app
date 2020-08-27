@@ -51,16 +51,15 @@ const logoutUserReducers = {
   },
 };
 
+const userSelector = (state) => state.user.data;
+
+export const userIdSelector = createSelector(userSelector, (user) => user?.id);
+
 export default createReducer(INITIAL_STATE, {
   ...findUserByIdReducers,
   ...validateUserReducers,
   ...logoutUserReducers,
 });
-
-const userIdSelector = createSelector(
-  (state) => state.user.data,
-  (user) => user?.id,
-);
 
 export function* asyncRequestFindUserById(action) {
   try {

@@ -1,9 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native';
-import BasicContainer from '../../library/BasicContainer';
-import InputText from '../../library/InputText';
-import Button from '../../library/Button';
-import ErrorText from '../../library/ErrorText';
+import {BasicContainer, InputText, Button, ErrorText} from '../../library';
 import useForm from '../../hooks/useForm';
 import {initialFormState, requestCreateUser} from './CreateUserSevice';
 

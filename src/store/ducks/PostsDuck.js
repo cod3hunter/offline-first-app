@@ -1,4 +1,4 @@
-import {createAction, createReducer} from '@reduxjs/toolkit';
+import {createAction, createReducer, createSelector} from '@reduxjs/toolkit';
 import {offlineActionTypes} from 'react-native-offline';
 import {call, put} from 'redux-saga/effects';
 import TYPES from '../types';
@@ -79,11 +79,11 @@ const createPostReducers = {
     const {data, offlineId, queued} = action.payload;
 
     if (offlineId && queued) {
-      state.data = state.data
-        .map((post) => (post.id === offlineId ? data : post))
-        .sort(sortByTitle);
+      state.data = state.data.map((post) =>
+        post.id === offlineId ? data : post,
+      );
     } else {
-      state.data = [...state.data, action.payload.data].sort(sortByTitle);
+      state.data.push(action.payload.data);
     }
   },
   [TYPES.FAILURE_CREATE_POST]: (state) => {
@@ -99,7 +99,8 @@ const findPostsReducers = {
   [TYPES.SUCCESS_FIND_POSTS]: (state, action) => {
     state.error = false;
     state.loading = false;
-    state.data = action.payload.data.sort(sortByTitle);
+    reactotron.log('data', action.payload);
+    state.data = action.payload.data;
   },
   [TYPES.FAILURE_FIND_POSTS]: (state) => {
     state.error = true;
@@ -115,9 +116,9 @@ const updatePostReducers = {
     state.error = false;
     state.loading = false;
     const updatedPostData = action.payload.data;
-    state.data = state.data
-      .map((post) => (post.id === updatedPostData.id ? updatedPostData : post))
-      .sort(sortByTitle);
+    state.data = state.data.map((post) =>
+      post.id === updatedPostData.id ? updatedPostData : post,
+    );
   },
   [TYPES.FAILURE_UPDATE_POST]: (state) => {
     state.loading = false;
@@ -132,26 +133,29 @@ const offlineReducers = {
       case TYPES.REQUEST_CREATE_POST:
         state.error = false;
         state.loading = false;
-        state.data = [...state.data, prevAction.payload].sort(sortByTitle);
+        state.data.push(prevAction.payload);
         break;
       case TYPES.REQUEST_UPDATE_POST:
         state.error = false;
         state.loading = false;
         reactotron.log('state', state);
-        state.data = state.data
-          .map((post) => {
-            reactotron.log('post', post);
-            return post?.id === prevAction.payload?.id
-              ? prevAction.payload
-              : post;
-          })
-          .filter((post) => {
-            return !!post;
-          })
-          .sort(sortByTitle);
+        state.data = state.data.map((post) =>
+          post?.id === prevAction.payload?.id ? prevAction.payload : post,
+        );
     }
   },
 };
+
+const postsSelector = (state) => state.posts.data;
+
+export const postListSelector = createSelector(postsSelector, (posts) =>
+  [...posts].sort(sortByTitle),
+);
+
+export const postByIdSelector = (postId) =>
+  createSelector(postsSelector, (posts) =>
+    posts.find((post) => post.id === postId),
+  );
 
 export default createReducer(INITIAL_STATE, {
   ...createPostReducers,
