@@ -25,7 +25,6 @@ const PostScreen = ({route}) => {
   const {loading, error} = useSelector((state) => state.posts);
 
   const [form, formDispatch] = useForm(initialFormState);
-
   useEffect(() => {
     if (post) {
       formDispatch({name: 'initialValues', value: post});

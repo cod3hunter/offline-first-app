@@ -38,7 +38,7 @@ export const updatePost = ({
 }) => () => {
   const post = normalizeFormData(form);
   if (validateFields({...post, setInvalidFieldValue})) {
-    dispatch(requestUpdatePost({...post, postId}));
+    dispatch(requestUpdatePost({...post, id: postId}));
   }
 };
 

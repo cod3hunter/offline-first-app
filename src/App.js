@@ -3,6 +3,7 @@ import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {persistor, store} from './store';
 import {Provider} from 'react-redux';
+import NetInfo from '@react-native-community/netinfo';
 import {PersistGate} from 'redux-persist/integration/react';
 import StackNavigator from './StackNavigator';
 import {COLORS} from './constants';

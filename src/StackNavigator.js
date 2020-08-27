@@ -22,6 +22,7 @@ const screenOptions = {
 
 const StackNavigator = () => {
   const userId = useSelector((state) => state.user.data?.id);
+  console.log(userId);
   const dispatch = useDispatch();
   if (userId) {
     return (

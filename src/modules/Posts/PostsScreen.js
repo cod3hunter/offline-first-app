@@ -8,6 +8,7 @@ import LoadingIndicator from '../../library/LoadingIndicator';
 import EmptyState from '../../library/EmptyState';
 import BasicContainer from '../../library/BasicContainer';
 import ErrorText from '../../library/ErrorText';
+import reactotron from 'reactotron-react-native';
 
 const styles = StyleSheet.create({
   contentContainerStyle: {
@@ -36,7 +37,7 @@ const HomeScreen = ({navigation}) => {
         {...{data}}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.contentContainerStyle}
-        keyExtractor={(item) => String(item.id)}
+        keyExtractor={(item) => String(item?.id)}
         renderItem={({item: {title, body, id}}) => (
           <PostCard {...{title, body}} onPress={goToPost({navigation, id})} />
         )}
