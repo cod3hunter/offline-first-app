@@ -1,11 +1,13 @@
 import React from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {createStackNavigator} from '@react-navigation/stack';
-import CreateUserScreen from './modules/CreateUser/CreateUserScreen';
-import AccessScreen from './modules/Access/AccessScreen';
-import PostsScreen from './modules/Posts/PostsScreen';
-import PostScreen from './modules/Posts/PostScreen';
-import SplashLoadingScreen from './modules/SplashLoading/SplashLoadingScreen';
+import {
+  CreateUserScreen,
+  AccessScreen,
+  PostScreen,
+  PostListScreen,
+  SplashLoadingScreen,
+} from './modules';
 import {HeaderButtons} from './library';
 import {COLORS} from './constants';
 import {logoutUser} from './store/actions';
@@ -36,7 +38,7 @@ const StackNavigator = () => {
         />
         <Stack.Screen
           name="Posts"
-          component={PostsScreen}
+          component={PostListScreen}
           options={({navigation}) => ({
             headerRight: () => (
               <HeaderButtons

@@ -6,6 +6,9 @@ import {
 } from '../../store/ducks/PostsDuck';
 
 export const findPosts = ({dispatch, userId}) => {
+  if (!userId) {
+    return;
+  }
   dispatch(requestFindPosts({userId}));
 };
 

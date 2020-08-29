@@ -13,8 +13,8 @@ import {
   createPost,
   updatePost,
 } from '../../services/GoRestService';
-import reactotron from 'reactotron-react-native';
 
+// actions
 export const requestCreatePost = createAction(
   TYPES.REQUEST_CREATE_POST,
   function prepare({title, body, userId}) {
@@ -69,6 +69,7 @@ const INITIAL_STATE = {
   loading: false,
 };
 
+// reducers
 const createPostReducers = {
   [TYPES.REQUEST_CREATE_POST]: (state) => {
     state.loading = true;
@@ -99,7 +100,6 @@ const findPostsReducers = {
   [TYPES.SUCCESS_FIND_POSTS]: (state, action) => {
     state.error = false;
     state.loading = false;
-    reactotron.log('data', action.payload);
     state.data = action.payload.data;
   },
   [TYPES.FAILURE_FIND_POSTS]: (state) => {
@@ -129,33 +129,23 @@ const updatePostReducers = {
 const offlineReducers = {
   [offlineActionTypes.FETCH_OFFLINE_MODE]: (state, action) => {
     const {prevAction} = action.payload;
-    switch (prevAction.type) {
-      case TYPES.REQUEST_CREATE_POST:
+    const reducer = {
+      [TYPES.REQUEST_CREATE_POST]: () => {
         state.error = false;
         state.loading = false;
         state.data.push(prevAction.payload);
-        break;
-      case TYPES.REQUEST_UPDATE_POST:
+      },
+      [TYPES.REQUEST_UPDATE_POST]: () => {
         state.error = false;
         state.loading = false;
-        reactotron.log('state', state);
         state.data = state.data.map((post) =>
           post?.id === prevAction.payload?.id ? prevAction.payload : post,
         );
-    }
+      },
+    };
+    reducer[prevAction.type]();
   },
 };
-
-const postsSelector = (state) => state.posts.data;
-
-export const postListSelector = createSelector(postsSelector, (posts) =>
-  [...posts].sort(sortByTitle),
-);
-
-export const postByIdSelector = (postId) =>
-  createSelector(postsSelector, (posts) =>
-    posts.find((post) => post.id === postId),
-  );
 
 export default createReducer(INITIAL_STATE, {
   ...createPostReducers,
@@ -172,6 +162,19 @@ export default createReducer(INITIAL_STATE, {
   },
 });
 
+// selectors
+const postsSelector = (state) => state.posts.data;
+
+export const postListSelector = createSelector(postsSelector, (posts) =>
+  [...posts].sort(sortByTitle),
+);
+
+export const postByIdSelector = (postId) =>
+  createSelector(postsSelector, (posts) =>
+    posts.find((post) => post.id === postId),
+  );
+
+// sagas
 export function* asyncRequestCreatePost(action) {
   try {
     const {userId, title, body, id} = action.payload;
@@ -190,6 +193,10 @@ export function* asyncRequestCreatePost(action) {
     console.log('failure', response.data);
     yield put(failureCreatePost());
   } catch (err) {
+    if (err.message === 'Network Error') {
+      const {userId, title, body} = action.payload;
+      return yield put(requestCreatePost({title, body, userId}));
+    }
     console.log('failure catch', err);
     yield put(failureCreatePost());
   }
@@ -200,7 +207,7 @@ export function* asyncRequestFindPosts(action) {
     const response = yield call(findPostsByUser, action.payload.userId);
     yield put(successFindPosts({data: response.data?.data}));
   } catch (err) {
-    console.log(err);
+    console.log('failure catch', err);
     yield put(failureFindPosts());
   }
 }
@@ -217,7 +224,11 @@ export function* asyncRequestUpdatePost(action) {
     console.log('failure', response.data);
     yield put(failureUpdatePost());
   } catch (err) {
-    console.log(err);
+    console.log(err.message);
+    if (err.message === 'Network Error') {
+      const {id, title, body} = action.payload;
+      return yield put(requestUpdatePost({id, title, body}));
+    }
     yield put(failureUpdatePost());
   }
 }

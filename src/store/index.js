@@ -18,7 +18,7 @@ import createSagaMiddleware from 'redux-saga';
 import AsyncStorage from '@react-native-community/async-storage';
 import user from './ducks/UserDuck';
 import posts from './ducks/PostsDuck';
-import rootSagas from './sagas';
+import rootSagas from './sagasRoot';
 import Reactotron from '../config/ReactotronConfig';
 import TYPES from './types';
 import createOfflineMiddleware from './offlineMiddleware';

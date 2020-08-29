@@ -1,9 +1,8 @@
 import React, {useEffect} from 'react';
-import styled from 'styled-components/native';
 import {FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import PropTypes from 'prop-types';
-import {findPosts, goToPost} from './PostsService';
+import {findPosts, goToPost} from './PostListService';
 import {postListSelector} from '../../store/ducks/PostsDuck';
 import {userIdSelector} from '../../store/ducks/UserDuck';
 import {
@@ -12,15 +11,9 @@ import {
   LoadingIndicator,
   PostCard,
   ErrorText,
-} from '../../library/';
+} from '../../library';
 
-const PostList = styled(FlatList).attrs(() => ({
-  contentContainerStyle: {
-    paddingBotton: 16,
-  },
-}))``;
-
-const HomeScreen = ({navigation}) => {
+const PostList = ({navigation}) => {
   const data = useSelector(postListSelector);
   const userId = useSelector(userIdSelector);
   const loading = useSelector((state) => state.posts.loading);
@@ -37,7 +30,8 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <BasicContainer>
-      <PostList
+      <FlatList
+        contentContainerStyle={{paddingBottom: 16}}
         {...{data}}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => String(item?.id)}
@@ -51,8 +45,8 @@ const HomeScreen = ({navigation}) => {
   );
 };
 
-HomeScreen.propTypes = {
+PostList.propTypes = {
   navigation: PropTypes.object.isRequired,
 };
 
-export default HomeScreen;
+export default PostList;

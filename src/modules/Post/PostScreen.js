@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 import {useSelector, useDispatch} from 'react-redux';
 import {BasicContainer, InputText, Button, ErrorText} from '../../library';
 import useForm from '../../hooks/useForm';
-import {createPost, initialFormState, updatePost} from './PostsService';
+import {createPost, initialFormState, updatePost} from './PostService';
 
 const InputContainer = styled.View`
   width: 100%;
